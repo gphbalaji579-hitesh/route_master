@@ -158,10 +158,12 @@
         }
 
         .animation-box {
-            background: white;
-            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
             padding: 25px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             margin-bottom: 0;
         }
 
@@ -260,8 +262,46 @@
         label {
             display: block;
             margin-bottom: 8px;
-            color: #333;
+            color: white;
             font-weight: 500;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #333;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #000;
+            background: #f0f0f0;
+            transition: border-color 0.3s, background 0.3s;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #333;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #000;
+            background: #f0f0f0;
+            transition: border-color 0.3s, background 0.3s;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
         textarea {
@@ -361,6 +401,87 @@
             border-radius: 4px;
         }
 
+        .grid-builder-container {
+            display: flex;
+            justify-content: center;
+            margin: 15px 0;
+        }
+
+        #gridBuilder {
+            display: inline-grid;
+            gap: 4px;
+            background: rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .builder-cell {
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .builder-cell:hover {
+            transform: scale(1.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .builder-cell.obstacle {
+            background: black;
+            color: white;
+        }
+
+        .builder-cell.target {
+            background: orange;
+            color: white;
+        }
+
+        .builder-cell.start {
+            background: #2196F3;
+            color: white;
+        }
+
+        .builder-legend {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+            flex-wrap: wrap;
+        }
+
+        .builder-mode-btn {
+            padding: 8px 12px;
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            background: transparent;
+            color: #667eea;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .builder-mode-btn:hover {
+            background: rgba(102, 126, 234, 0.1);
+            border-color: #667eea;
+        }
+
+        .builder-mode-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+
         .grid-cell {
             width: 40px;
             height: 40px;
@@ -453,6 +574,7 @@
             white-space: pre-wrap;
             word-break: break-all;
             line-height: 1.5;
+            color: #000;
         }
 
         .stats {
@@ -468,6 +590,14 @@
             border-radius: 6px;
             text-align: center;
             border-left: 4px solid #667eea;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+            background: #f0f0f0;
         }
 
         .stat-label {
@@ -742,39 +872,29 @@
                     <button class="algorithm-btn" onclick="setAlgorithm('dijkstra')">🎯 Dijkstra</button>
                 </div>
                 <div class="form-group">
-                    <label>Input Mode</label>
-                    <div>
-                        <label><input type="radio" name="inputMode" value="json" checked onchange="switchInputMode()"> JSON</label>
-                        <label><input type="radio" name="inputMode" value="manual" onchange="switchInputMode()"> Manual</label>
+                    <label for="rowsInput">Grid Rows</label>
+                    <input type="number" id="rowsInput" min="2" max="20" value="6" onchange="updateGridBuilder()">
+                </div>
+                <div class="form-group">
+                    <label for="colsInput">Grid Columns</label>
+                    <input type="number" id="colsInput" min="2" max="20" value="8" onchange="updateGridBuilder()">
+                </div>
+                
+                <div class="form-group">
+                    <label>🔨 Grid Builder - Click to toggle:</label>
+                    <div class="builder-legend">
+                        <button class="builder-mode-btn active" onclick="setBuilderMode('start')">🔵 Start</button>
+                        <button class="builder-mode-btn" onclick="setBuilderMode('target')">🎯 Targets</button>
+                        <button class="builder-mode-btn" onclick="setBuilderMode('obstacle')">⬛ Obstacles</button>
+                    </div>
+                    <div class="grid-builder-container">
+                        <div id="gridBuilder"></div>
+                    </div>
+                    <div style="margin-top: 10px; font-size: 0.9em; color: #999;">
+                        Current Mode: <span id="currentMode">Start Position</span>
                     </div>
                 </div>
-                <div class="form-group" id="jsonGroup">
-                    <label for="jsonInput">Warehouse Configuration (JSON)</label>
-                    <textarea id="jsonInput" placeholder="Paste your JSON configuration here..."></textarea>
-                    <div class="input-info">Required fields: grid (2D array), start (array), targets (array of arrays)</div>
-                </div>
-                <div id="manualGroup" style="display: none;">
-                    <div class="form-group">
-                        <label for="rowsInput">Rows</label>
-                        <input type="number" id="rowsInput" min="1" value="5">
-                    </div>
-                    <div class="form-group">
-                        <label for="colsInput">Cols</label>
-                        <input type="number" id="colsInput" min="1" value="5">
-                    </div>
-                    <div class="form-group">
-                        <label for="startInput">Start (row,col)</label>
-                        <input type="text" id="startInput" placeholder="e.g. 0,0">
-                    </div>
-                    <div class="form-group">
-                        <label for="obstaclesInput">Obstacles (row,col; ...)</label>
-                        <input type="text" id="obstaclesInput" placeholder="e.g. 1,2;2,3">
-                    </div>
-                    <div class="form-group">
-                        <label for="targetsInput">Targets (row,col; ...)</label>
-                        <input type="text" id="targetsInput" placeholder="e.g. 3,4;4,0">
-                    </div>
-                </div>
+
                 <div class="button-group">
                     <button class="calculate-btn" onclick="calculateRoute()">🎯 Calculate Route</button>
                     <button class="clear-btn" onclick="clearAll()">Clear</button>
@@ -823,7 +943,7 @@
                     </div>
                     <div class="legend-item">
                         <div class="legend-box" style="background: #4CAF50;"></div>
-                        <span>Completed Path ●</span>
+                        <span>Completed Path (Step #s)</span>
                     </div>
                     <div class="legend-item">
                         <div class="legend-box" style="background: linear-gradient(135deg, #90EE90, #32CD32);"></div>
@@ -893,6 +1013,109 @@
         let currentAlgorithm = 'bfs';
         let performanceData = {};
         let soundEnabled = true;
+        let builderMode = 'start';
+        let gridBuilderData = {};
+
+        // ========== GRID BUILDER FUNCTIONS ==========
+        function updateGridBuilder() {
+            const rows = parseInt(document.getElementById('rowsInput').value, 10);
+            const cols = parseInt(document.getElementById('colsInput').value, 10);
+            
+            if (isNaN(rows) || isNaN(cols) || rows < 2 || cols < 2) {
+                return;
+            }
+
+            // Initialize builder data if needed
+            if (!gridBuilderData.rows || gridBuilderData.rows !== rows || gridBuilderData.cols !== cols) {
+                gridBuilderData = { rows, cols, obstacles: [], targets: [], start: null };
+            }
+
+            const builder = document.getElementById('gridBuilder');
+            builder.style.gridTemplateColumns = `repeat(${cols}, 35px)`;
+            builder.innerHTML = '';
+
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'builder-cell';
+                    cell.setAttribute('data-row', i);
+                    cell.setAttribute('data-col', j);
+
+                    // Determine cell state
+                    if (gridBuilderData.start && gridBuilderData.start[0] === i && gridBuilderData.start[1] === j) {
+                        cell.classList.add('start');
+                        cell.textContent = 'S';
+                    } else if (gridBuilderData.obstacles.some(obs => obs[0] === i && obs[1] === j)) {
+                        cell.classList.add('obstacle');
+                        cell.textContent = '█';
+                    } else if (gridBuilderData.targets.some(tgt => tgt[0] === i && tgt[1] === j)) {
+                        cell.classList.add('target');
+                        cell.textContent = 'T';
+                    }
+
+                    cell.onclick = () => toggleBuilderCell(i, j);
+                    builder.appendChild(cell);
+                }
+            }
+        }
+
+        function setBuilderMode(mode) {
+            builderMode = mode;
+            
+            // Update button styles
+            document.querySelectorAll('.builder-mode-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Update mode display
+            const modeText = mode === 'obstacle' ? 'Obstacles' : mode === 'target' ? 'Targets' : 'Start Position';
+            document.getElementById('currentMode').textContent = modeText;
+        }
+
+        function toggleBuilderCell(row, col) {
+            if (builderMode === 'obstacle') {
+                const index = gridBuilderData.obstacles.findIndex(obs => obs[0] === row && obs[1] === col);
+                if (index === -1) {
+                    gridBuilderData.obstacles.push([row, col]);
+                } else {
+                    gridBuilderData.obstacles.splice(index, 1);
+                }
+            } else if (builderMode === 'target') {
+                const index = gridBuilderData.targets.findIndex(tgt => tgt[0] === row && tgt[1] === col);
+                if (index === -1) {
+                    gridBuilderData.targets.push([row, col]);
+                } else {
+                    gridBuilderData.targets.splice(index, 1);
+                }
+            } else if (builderMode === 'start') {
+                if (gridBuilderData.start && gridBuilderData.start[0] === row && gridBuilderData.start[1] === col) {
+                    gridBuilderData.start = null;
+                } else {
+                    gridBuilderData.start = [row, col];
+                }
+            }
+            updateGridBuilder();
+        }
+
+        function getGridFromBuilder() {
+            const rows = gridBuilderData.rows;
+            const cols = gridBuilderData.cols;
+            const grid = Array.from({ length: rows }, () => Array(cols).fill(0));
+
+            // Place obstacles
+            gridBuilderData.obstacles.forEach(([r, c]) => {
+                if (r >= 0 && r < rows && c >= 0 && c < cols) {
+                    grid[r][c] = 1;
+                }
+            });
+
+            return {
+                grid,
+                start: gridBuilderData.start || [0, 0],
+                targets: gridBuilderData.targets || []
+            };
+        }
 
         // ========== JSON PARSING ==========
         function parseJSON(jsonString) {
@@ -1179,11 +1402,11 @@
             const cols = grid[0].length;
             gridContainer.style.gridTemplateColumns = `repeat(${cols}, 40px)`;
 
-            // Create path set for quick lookup
-            const pathSet = new Set();
+            // Create path map for quick lookup with step numbers
+            const pathMap = new Map();
             if (path) {
-                path.forEach(point => {
-                    pathSet.add(JSON.stringify(point));
+                path.forEach((point, index) => {
+                    pathMap.set(JSON.stringify(point), index);
                 });
             }
 
@@ -1205,9 +1428,10 @@
                     } else if (targets.some(t => t[0] === i && t[1] === j)) {
                         cell.className += ' cell-target';
                         cell.textContent = 'T';
-                    } else if (pathSet.has(pointKey)) {
+                    } else if (pathMap.has(pointKey)) {
                         cell.className += ' cell-path';
-                        cell.textContent = '●';
+                        const stepNumber = pathMap.get(pointKey);
+                        cell.textContent = stepNumber === 0 ? 'S' : stepNumber;
                     } else {
                         cell.className += ' cell-walkable';
                     }
@@ -1225,18 +1449,19 @@
         // ========== MAIN CALCULATION ==========
         function calculateRoute() {
             try {
-                let data;
-                const mode = document.querySelector('input[name="inputMode"]:checked').value;
-                if (mode === 'manual') {
-                    data = buildManualConfig();
-                } else {
-                    const jsonInput = document.getElementById('jsonInput').value.trim();
-                    if (!jsonInput) {
-                        showError('Please enter a JSON configuration');
-                        return;
-                    }
-                    data = parseJSON(jsonInput);
+                // Get data from grid builder
+                const data = getGridFromBuilder();
+                
+                // Validate
+                if (!data.start) {
+                    showError('Please set a start position (click mode: 🔵 Start)');
+                    return;
                 }
+                if (data.targets.length === 0) {
+                    showError('Please add at least one target (click mode: 🎯 Targets)');
+                    return;
+                }
+
                 currentGrid = data.grid;
                 currentStart = data.start;
                 currentTargets = data.targets;
@@ -1296,7 +1521,6 @@
         }
 
         function clearAll() {
-            document.getElementById('jsonInput').value = '';
             document.getElementById('outputJson').textContent = 'No route calculated yet';
             document.getElementById('statusMessage').style.display = 'none';
             document.getElementById('statSteps').textContent = '-';
@@ -1311,6 +1535,12 @@
             currentTargets = null;
             currentPath = null;
             isAnimating = false;
+
+            // Reset grid builder
+            const rows = parseInt(document.getElementById('rowsInput').value, 10);
+            const cols = parseInt(document.getElementById('colsInput').value, 10);
+            gridBuilderData = { rows, cols, obstacles: [], targets: [], start: null };
+            updateGridBuilder();
         }
 
         function updatePerformanceMetrics(result) {
@@ -1331,21 +1561,21 @@
         }
 
         function loadExample() {
-            const example = {
-                "grid": [
-                    [0, 0, 0, 1, 0, 0, 0, 1, 0, 0],
-                    [0, 1, 0, 1, 0, 1, 0, 1, 0, 0],
-                    [0, 1, 0, 0, 0, 1, 0, 0, 0, 1],
-                    [0, 0, 0, 1, 0, 0, 0, 1, 0, 0],
-                    [1, 1, 0, 1, 0, 1, 0, 1, 0, 0],
-                    [0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
-                    [0, 1, 1, 1, 0, 0, 0, 1, 1, 0],
-                    [0, 0, 0, 0, 0, 1, 0, 0, 0, 0]
-                ],
-                "start": [0, 0],
-                "targets": [[2, 2], [4, 6], [6, 8], [7, 9]]
+            // Load example into grid builder
+            gridBuilderData = {
+                rows: 8,
+                cols: 10,
+                obstacles: [[0, 3], [0, 7], [1, 1], [1, 3], [1, 5], [1, 7], [2, 1], [2, 5], [2, 9], 
+                           [3, 3], [3, 7], [4, 0], [4, 1], [4, 3], [4, 5], [4, 7], [5, 5], 
+                           [6, 1], [6, 2], [6, 3], [6, 7], [6, 8], [7, 5]],
+                targets: [[2, 2], [4, 6], [6, 8], [7, 9]],
+                start: [0, 0]
             };
-            document.getElementById('jsonInput').value = JSON.stringify(example, null, 2);
+            
+            document.getElementById('rowsInput').value = 8;
+            document.getElementById('colsInput').value = 10;
+            updateGridBuilder();
+            calculateRoute();
         }
 
         function copyOutput() {
@@ -1357,6 +1587,29 @@
             navigator.clipboard.writeText(output).then(() => {
                 showSuccess('Output copied to clipboard!');
             });
+        }
+
+        function switchTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            const selectedContent = document.getElementById(tabName + '-tab');
+            if (selectedContent) {
+                selectedContent.classList.add('active');
+            }
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
         }
 
         function toggleSound() {
@@ -1550,7 +1803,7 @@
                         const prevCell = document.querySelector(`[data-row="${prevX}"][data-col="${prevY}"]`);
                         if (prevCell && !prevCell.classList.contains('current-position')) {
                             prevCell.classList.add('path-completed');
-                            prevCell.textContent = '●';
+                            prevCell.textContent = i === 0 ? 'S' : i;
                         }
                     }
                 }
@@ -1611,9 +1864,8 @@
         // ========== INITIALIZATION ==========
         window.addEventListener('load', () => {
             createParticles();
-            switchInputMode();
+            updateGridBuilder();
             loadExample();
-            calculateRoute();
             updateSpeedLabel();
             document.getElementById('speedSlider').addEventListener('input', updateSpeedLabel);
         });
