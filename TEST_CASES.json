@@ -1,0 +1,72 @@
+{
+  "test_cases": [
+    {
+      "name": "Your Problem Case - Grid with value 2",
+      "input": {
+        "grid": [
+          [0,0,1,0,0],
+          [0,0,1,0,2],
+          [0,0,0,0,0],
+          [2,1,1,1,0],
+          [0,0,0,0,0]
+        ],
+        "start": [0,0],
+        "targets": [[1,4],[3,0]]
+      },
+      "expected": "Route from [0,0] -> [1,4] -> [3,0]"
+    },
+    {
+      "name": "Simple 3x3 Grid",
+      "input": {
+        "grid": [[0, 0, 1], [0, 1, 1], [0, 0, 0]],
+        "start": [0, 0],
+        "targets": [[2, 2]]
+      },
+      "expected": "Route from [0,0] to [2,2]"
+    },
+    {
+      "name": "Larger 10x10 Grid",
+      "input": {
+        "grid": [
+          [0, 0, 0, 1, 0, 0, 0, 1, 0, 0],
+          [0, 1, 0, 1, 0, 1, 0, 1, 0, 0],
+          [0, 1, 0, 0, 0, 1, 0, 0, 0, 1],
+          [0, 0, 0, 1, 0, 0, 0, 1, 0, 0],
+          [1, 1, 0, 1, 0, 1, 0, 1, 0, 0],
+          [0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+          [0, 1, 1, 1, 0, 0, 0, 1, 1, 0],
+          [0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        ],
+        "start": [0, 0],
+        "targets": [[2, 2], [4, 6], [6, 8], [7, 9]]
+      },
+      "expected": "Multi-target route with 4 targets"
+    },
+    {
+      "name": "Single Step Route",
+      "input": {
+        "grid": [[0, 0], [0, 0]],
+        "start": [0, 0],
+        "targets": [[0, 1]]
+      },
+      "expected": "Single step from [0,0] to [0,1]"
+    },
+    {
+      "name": "Complex Path with Mixed Values",
+      "input": {
+        "grid": [
+          [0, 2, 1, 0],
+          [0, 1, 0, 0],
+          [0, 0, 0, 2],
+          [0, 1, 1, 0]
+        ],
+        "start": [0, 0],
+        "targets": [[0, 1], [2, 3]]
+      },
+      "expected": "Route handling mixed grid values"
+    }
+  ],
+  "instructions": "Paste each test case into the JSON input field and click 'Calculate Route', then click 'Start Route Animation' to verify the animation works smoothly."
+}
